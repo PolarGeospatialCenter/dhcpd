@@ -1,0 +1,3 @@
+[template]
+src = "dhcpd.tmpl.conf"
+dest = "/etc/dhcpd.conf"

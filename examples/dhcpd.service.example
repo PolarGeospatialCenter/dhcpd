@@ -1,0 +1,25 @@
+[Unit]
+Description=DHCP Daemon
+After=docker.service
+Requires=docker.service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop dhcpd
+ExecStartPre=-/usr/bin/docker rm dhcpd
+ExecStartPre=/usr/bin/docker pull quay.io/polargeospatialcenter/dhcpd:latest
+ExecStart=/usr/bin/docker run --name dhcpd --rm \
+  --net=host \
+  -e DHCPD_NETWORK=192.0.2.0 \
+  -e DHCPD_NETMASK=255.255.255.0 \
+  -e DHCPD_GATEWAY=192.0.2.1 \
+  -e DHCPD_DNS=8.8.8.8 \
+  -e DHCPD_RANGE_BEGIN=192.0.2.10 \
+  -e DHCPD_RANGE_END=192.0.2.100 \
+  quay.io/polargeospatialcenter/dhcpd:latest
+
+[Install]
+WantedBy=multi-user.target

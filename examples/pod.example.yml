@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tftpd
+spec:
+  hostnetwork: true
+  containers:
+    - name: tftpd
+      image: quay.io/polargeospatialcenter/tftpd:latest
+      ports:
+        - name: tftp
+          containerPort: 69
+          protocol: UDP
+      env:
+        - name: IPXE_URL
+          value: http://${next-server}/ipxe?mac=${mac}
